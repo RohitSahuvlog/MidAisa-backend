@@ -3,12 +3,15 @@ const cors = require("cors");
 const { connection } = require("./config/db");
 const { authentication } = require("./middlewares/authentication");
 const { authroute } = require("./router/auth.route");
-const { userrouter } = require("./router/user.route");
-const { adminroute } = require("./router/admin.route");
-const path = require("path")
-const app = express();
-app.use(express.urlencoded({ extended: true }));
+const { travelrouter } = require("./router/travel.route");
+const path = require("path");
+const { enquiryrouter } = require("./router/enquiry.route");
 require("dotenv").config();
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+
+
 app.use(express.json());
 app.use(cors());
 PORT = process.env.PORT || 8000;
@@ -18,8 +21,11 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authroute);
-app.use("/api/user", userrouter);
-app.use("/pdfupload", adminroute);
+app.use("/travel", travelrouter);
+app.use("/enquiry", enquiryrouter);
+// app.use("/travelform", travelrouter);
+
+
 app.get('/download/:filename', function (req, res) {
     const fileName = req.params.filename.toString();
     const filePath = path.join(__dirname, 'uploads', fileName);

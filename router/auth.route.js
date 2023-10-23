@@ -2,30 +2,27 @@ const router = require("express");
 const bcrypt = require("bcryptjs");
 const authroute = router();
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.models");
-const query = require("../models/query.model");
+const AdminUser = require("../models/user.models");
+const query = require("../models/enquiry.model");
 const nodemailer = require("nodemailer");
-const queryModel = require("../models/query.model");
+const queryModel = require("../models/enquiry.model");
 
 
-authroute.post("/signup", async (req, res) => {
+authroute.post("/signin", async (req, res) => {
     try {
         const {
             email,
             password
         } = req.body;
 
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await AdminUser.findOne({ email });
         if (existingUser) {
             return res.status(409).send({ message: "User already exists" });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user
-        const user = new User({
+        const user = new AdminUser({
             email,
             password: hashedPassword
         });
@@ -40,24 +37,21 @@ authroute.post("/signup", async (req, res) => {
 
 authroute.post("/login", async (req, res) => {
     try {
-        const { email, password, contactnumber } = req.body;
+        const { email, password } = req.body;
 
-        // Find the user by the email
-        let user = await User.findOne({
+        let user = await AdminUser.findOne({
             email
         });
         if (!user) {
             return res.status(401).send({ message: "Authentication failed" });
         }
 
-        // Compare the provided password with the hashed password stored in the database
+
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log(isMatch)
         if (!isMatch) {
             return res.status(401).send({ message: "Authentication failed" });
         }
 
-        // Generate a JWT token
         const token = jwt.sign({ userId: user._id, email: email, role: user.role }, process.env.JWT_SECRET);
 
         return res.status(200).send({
@@ -69,6 +63,7 @@ authroute.post("/login", async (req, res) => {
         res.status(500).send({ message: "Internal server error" });
     }
 });
+
 
 authroute.post("/feedback", async (req, res) => {
     try {
@@ -101,7 +96,6 @@ authroute.get("/feedback", async (req, res) => {
 authroute.post("/forgot-password", async (req, res) => {
     const { email } = req.body
 
-    // connect with the smtp
     let transporter = await nodemailer.createTransport({
         host: "smtp.ethereal.email",
         port: 587,
@@ -181,5 +175,5 @@ function generateOTP() {
 
 
 module.exports = {
-    authroute,
+    authroute
 };
