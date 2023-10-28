@@ -6,6 +6,7 @@ const { authroute } = require("./router/auth.route");
 const { travelrouter } = require("./router/travel.route");
 const path = require("path");
 const { enquiryrouter } = require("./router/enquiry.route");
+const countryRouter = require("./router/country.route");
 require("dotenv").config();
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authroute);
 app.use("/travel", travelrouter);
 app.use("/enquiry", enquiryrouter);
+app.use('/countries', countryRouter);
 // app.use("/travelform", travelrouter);
 
 
