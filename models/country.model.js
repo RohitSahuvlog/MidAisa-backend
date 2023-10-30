@@ -10,7 +10,7 @@ const itinerarySchema = new mongoose.Schema({
 });
 
 const countrySchema = new mongoose.Schema({
-    country: String,
+    country: { type: String, unique: true },
     overviewlefth: String,
     overviewrighth: String,
     itineryheading: String,

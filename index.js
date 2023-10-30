@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authroute);
 app.use("/travel", travelrouter);
 app.use("/enquiry", enquiryrouter);
-app.use('/countries', countryRouter);
+app.use('/api/countries', countryRouter);
 // app.use("/travelform", travelrouter);
 
 
