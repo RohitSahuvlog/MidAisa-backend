@@ -8,6 +8,8 @@ const path = require("path");
 const { enquiryrouter } = require("./router/enquiry.route");
 const countryRouter = require("./router/country.route");
 const footerRouter = require("./router/footer.route");
+const travelPackage = require("./router/travelpackage.router");
+const formRouter = require("./router/enquiryform.route");
 require("dotenv").config();
 const app = express();
 
@@ -27,7 +29,8 @@ app.use("/travel", travelrouter);
 app.use("/enquiry", enquiryrouter);
 app.use('/api/countries', countryRouter);
 app.use('/api/footer', footerRouter);
-// app.use("/travelform", travelrouter);
+app.use("/api/package", travelPackage);
+app.use("/api/enquiryform", formRouter);
 
 
 app.get('/download/:filename', function (req, res) {

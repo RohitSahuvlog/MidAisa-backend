@@ -14,6 +14,7 @@ const countrySchema = new mongoose.Schema({
     overviewlefth: String,
     overviewrighth: String,
     itineryheading: String,
+    carousalimages: Array,
     listing: [itinerarySchema],
 });
 
