@@ -6,6 +6,7 @@ const itinerarySchema = new mongoose.Schema({
     text: String,
     destination: String,
     duration: String,
+    interests: String,
     priceperperson: String,
 });
 

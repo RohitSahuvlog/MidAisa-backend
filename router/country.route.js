@@ -68,7 +68,6 @@ countryRouter.put('/update-country/:id', async (req, res) => {
     }
 });
 
-// Delete a specific listing item by country ID and listing item ID
 countryRouter.delete('/delete-listing-item/:countryId/:listingItemId', async (req, res) => {
     try {
         const country = await Country.findById(req.params.countryId);

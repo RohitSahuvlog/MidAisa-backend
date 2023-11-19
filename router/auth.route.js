@@ -85,7 +85,6 @@ authroute.post("/feedback", async (req, res) => {
 authroute.get("/feedback", async (req, res) => {
     try {
         const queries = await queryModel.find().sort({ create_at: -1 });
-        console.log(queries)
         res.status(200).json(queries);
     } catch (error) {
         res.status(500).json({ error: error.message });

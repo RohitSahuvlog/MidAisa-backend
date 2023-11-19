@@ -28,11 +28,12 @@ enquiryrouter.get('/enquiries/:enquiryId', async (req, res) => {
         const enquiry = await Enquiry.findById(enquiryId);
 
         if (!enquiry) {
-            return res.status(404).json({ message: 'Enquiry not found' });
+            return res.status(400).json({ message: 'Enquiry not found' });
         }
 
         res.status(200).json(enquiry);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -44,7 +45,7 @@ enquiryrouter.put('/enquiries/:enquiryId', async (req, res) => {
         const enquiry = await Enquiry.findByIdAndUpdate(enquiryId, updatedEnquiry, { new: true });
 
         if (!enquiry) {
-            return res.status(404).json({ message: 'Enquiry not found' });
+            return res.status(400).json({ message: 'Enquiry not found' });
         }
 
         res.status(200).json(enquiry);
@@ -56,10 +57,9 @@ enquiryrouter.put('/enquiries/:enquiryId', async (req, res) => {
 enquiryrouter.delete('/enquiries/:enquiryId', async (req, res) => {
     try {
         const enquiryId = req.params.enquiryId;
-        const enquiry = await Enquiry.findByIdAndRemove(enquiryId);
-
+        const enquiry = await Enquiry.findByIdAndRemove(req.params.enquiryId);
         if (!enquiry) {
-            return res.status(404).json({ message: 'Enquiry not found' });
+            return res.status(400).json({ message: 'Enquiry not found' });
         }
 
         res.status(200).json({ message: 'Enquiry form deleted successfully' });

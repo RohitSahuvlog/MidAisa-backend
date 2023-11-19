@@ -5,7 +5,6 @@ const Footer = require('../models/footer.model');
 footerRouter.get('/get-footer', async (req, res) => {
     try {
         const footerData = await Footer.findOne({}); // Assuming you have only one footer document
-        console.log("footerData", footerData)
         res.status(200).send(footerData);
     } catch (err) {
         res.status(500).send({ error: 'Internal Server Error' });
