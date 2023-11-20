@@ -4,56 +4,81 @@ const TravelPackage = require('../models/travelpackage.module'); // Assuming thi
 
 travelPackage.post('/travel-packages', async (req, res) => {
     try {
-        const travelPackage = new TravelPackage(req.body);
+        req.body.country = req.body.country.toUpperCase();
+        const travelPackage = new TravelPackage({
+            ...req.body,
+            startDate: new Date(req.body.startDate).toISOString().split('T')[0],
+            endDate: new Date(req.body.endDate).toISOString().split('T')[0],
+        });
         await travelPackage.save();
-        res.status(201).json(travelPackage);
+        res.status(201).send(travelPackage);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).send({ error: error.message });
     }
 });
 
 travelPackage.get('/travel-packages', async (req, res) => {
     try {
         const travelPackages = await TravelPackage.find();
-        res.json(travelPackages);
+        res.send(travelPackages);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 });
 
-travelPackage.get('/travel-packages/:id', async (req, res) => {
+travelPackage.get('/get-travel-packages/:id', async (req, res) => {
     try {
         const travelPackage = await TravelPackage.findById(req.params.id);
         if (!travelPackage) {
-            return res.status(404).json({ error: 'Travel package not found' });
+            return res.status(404).send({ error: 'Travel package not found' });
         }
-        res.json(travelPackage);
+        res.send(travelPackage);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 });
 
 travelPackage.get('/travel-packages/:country', async (req, res) => {
     try {
-        const travelPackage = await TravelPackage.findById({ country: req.params.country });
+        const inputCountry = req.params.country;
+
+        const regex = new RegExp('^' + inputCountry + '$', 'i');
+
+        const travelPackage = await TravelPackage.findOne({
+            country: { $regex: regex }
+        });
+
         if (!travelPackage) {
-            return res.status(404).json({ error: 'Travel package not found' });
+            return res.status(400).send({ error: 'Travel package not found' });
         }
-        res.json(travelPackage);
+
+        res.status(200).send(travelPackage);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 });
 
+
 travelPackage.put('/travel-packages/:id', async (req, res) => {
     try {
-        const travelPackage = await TravelPackage.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        console.log({
+            ...req.body,
+            country: req.body.country.toUpperCase(),
+            startDate: new Date(req.body.startDate).toISOString().split('T')[0],
+            endDate: new Date(req.body.endDate).toISOString().split('T')[0],
+        })
+        const travelPackage = await TravelPackage.findByIdAndUpdate(req.params.id, {
+            ...req.body,
+            country: req.body.country.toUpperCase(),
+            startDate: new Date(req.body.startDate).toISOString().split('T')[0],
+            endDate: new Date(req.body.endDate).toISOString().split('T')[0],
+        }, { new: true });
         if (!travelPackage) {
-            return res.status(404).json({ error: 'Travel package not found' });
+            return res.status(404).send({ error: 'Travel package not found' });
         }
-        res.json(travelPackage);
+        res.send(travelPackage);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 });
 
@@ -61,11 +86,11 @@ travelPackage.delete('/travel-packages/:id', async (req, res) => {
     try {
         const travelPackage = await TravelPackage.findByIdAndRemove(req.params.id);
         if (!travelPackage) {
-            return res.status(404).json({ error: 'Travel package not found' });
+            return res.status(404).send({ error: 'Travel package not found' });
         }
-        res.json({ message: 'Travel package deleted' });
+        res.send({ message: 'Travel package deleted' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).send({ error: error.message });
     }
 });
 
