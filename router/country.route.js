@@ -43,6 +43,7 @@ countryRouter.get('/get-country/:id', async (req, res) => {
 });
 
 countryRouter.post('/add-country', async (req, res) => {
+    console.log(req.body)
     const country = new Country(req.body);
     try {
         const newCountry = await country.save();
@@ -54,6 +55,7 @@ countryRouter.post('/add-country', async (req, res) => {
 
 countryRouter.put('/update-country/:id', async (req, res) => {
     try {
+        console.log(req.body)
         const updatedCountry = await Country.findByIdAndUpdate(
             req.params.id,
             req.body,

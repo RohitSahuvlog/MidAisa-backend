@@ -35,7 +35,7 @@ authroute.post("/signin", async (req, res) => {
     }
 });
 
-authroute.post("/login", async (req, res) => {
+authroute.post("/admin-login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
