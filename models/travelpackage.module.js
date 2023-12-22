@@ -29,6 +29,10 @@ const travelPackageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    activity_level: {
+        type: String,
+        required: true,
+    },
 });
 
 const TravelPackage = mongoose.model('TravelPackage', travelPackageSchema);

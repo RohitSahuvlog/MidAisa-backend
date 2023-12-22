@@ -9,6 +9,11 @@ const itinerarySchema = new mongoose.Schema({
     interests: String,
     priceperperson: String,
 });
+const itinerarydaybyday = new mongoose.Schema({
+    day: Number,
+    location: String,
+    activities: String
+});
 
 const countrySchema = new mongoose.Schema({
     country: { type: String, unique: true },
@@ -17,6 +22,7 @@ const countrySchema = new mongoose.Schema({
     itineryheading: String,
     carousalimages: Array,
     listing: [itinerarySchema],
+    itineraryDayData: [itinerarydaybyday]
 });
 
 const Country = mongoose.model('Country', countrySchema);

@@ -12,9 +12,17 @@ const travelPackage = require("./router/travelpackage.router");
 const formRouter = require("./router/enquiryform.route");
 require("dotenv").config();
 const app = express();
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
 app.use(express.urlencoded({ extended: true }));
 
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: 'dxhoawdbh',
+    api_key: '413744952739994',
+    api_secret: 'LKVMmL7Xo5TNtrryk_3xKqqzHTI',
+});
 
 app.use(express.json());
 app.use(cors());
@@ -47,6 +55,31 @@ app.get('/download/:filename', function (req, res) {
     });
 });
 
+// Configure Multer for handling file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.use('/api/cloudinary/upload', upload.array('file', 5), async (req, res) => {
+    try {
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ error: 'No files uploaded.' });
+        }
+
+        const promises = req.files.map(async (file) => {
+            const result = await cloudinary.uploader.upload(`data:${file.mimetype};base64,${file.buffer.toString('base64')}`, {
+                folder: 'country-image',
+            });
+            return result;
+        });
+
+        const results = await Promise.all(promises);
+
+        res.json(results);
+    } catch (error) {
+        console.error('Error uploading images to Cloudinary:', error);
+        res.status(500).json({ error: 'Failed to upload images to Cloudinary' });
+    }
+});
 
 app.listen(PORT, async (req, res) => {
     try {

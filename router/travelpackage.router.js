@@ -61,12 +61,7 @@ travelPackage.get('/travel-packages/:country', async (req, res) => {
 
 travelPackage.put('/travel-packages/:id', async (req, res) => {
     try {
-        console.log({
-            ...req.body,
-            country: req.body.country.toUpperCase(),
-            startDate: new Date(req.body.startDate).toISOString().split('T')[0],
-            endDate: new Date(req.body.endDate).toISOString().split('T')[0],
-        })
+        console.log(req.body)
         const travelPackage = await TravelPackage.findByIdAndUpdate(req.params.id, {
             ...req.body,
             country: req.body.country.toUpperCase(),
